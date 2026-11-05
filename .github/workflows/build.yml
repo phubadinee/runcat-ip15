@@ -15,11 +15,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Select Xcode 16
+        run: |
+          XCODE_PATH=$(find /Applications -maxdepth 1 -name "Xcode_16*.app" | sort -V | tail -n 1)
+          if [ -n "$XCODE_PATH" ]; then
+            echo "Switching to $XCODE_PATH"
+            sudo xcode-select -s "$XCODE_PATH"
+          fi
+          xcodebuild -version
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Generate Xcode Project
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          # Ensure compatibility if running on Xcode 15
+          XCODE_MAJOR=$(xcodebuild -version | head -n 1 | awk '{print $2}' | cut -d. -f1)
+          if [ "$XCODE_MAJOR" -lt 16 ]; then
+            sed -i '' 's/objectVersion = 77;/objectVersion = 60;/g' CatRun.xcodeproj/project.pbxproj || true
+          fi
 
       - name: Build App (Unsigned)
         run: |
