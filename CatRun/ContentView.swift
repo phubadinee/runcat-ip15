@@ -92,7 +92,7 @@ struct ContentView: View {
                             }
                             Slider(value: $catSpeed, in: 0.5...3.0, step: 0.1)
                                 .tint(.orange)
-                                .onChange(of: catSpeed) { _ in
+                                .onChange(of: catSpeed) {
                                     updateLiveActivity()
                                 }
                         }

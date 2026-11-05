@@ -103,7 +103,7 @@ struct AnimatedCatView: View {
                 .scaledToFit()
                 .frame(width: size, height: size)
         } animation: { _ in
-            .linear(duration: max(0.06, 0.14 / speed)).repeatForever(autoreverses: false)
+            .linear(duration: max(0.06, 0.14 / speed))
         }
     }
 }

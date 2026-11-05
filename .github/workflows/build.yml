@@ -21,22 +21,25 @@ jobs:
       - name: Generate Xcode Project
         run: xcodegen generate
 
-      - name: Build Archive (Unsigned)
+      - name: Build App (Unsigned)
         run: |
-          xcodebuild archive \
+          xcodebuild build \
             -project CatRun.xcodeproj \
             -scheme CatRun \
             -configuration Release \
             -destination "generic/platform=iOS" \
-            -archivePath "build/CatRun.xcarchive" \
+            -derivedDataPath DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY=""
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
 
       - name: Package IPA
         run: |
           mkdir -p Payload
-          cp -r "build/CatRun.xcarchive/Products/Applications/CatRun.app" Payload/
+          APP_PATH=$(find DerivedData/Build/Products/Release-iphoneos -maxdepth 1 -name "CatRun.app")
+          echo "Found app at: $APP_PATH"
+          cp -r "$APP_PATH" Payload/
           zip -qr "CatRun.ipa" Payload
 
       - name: Upload IPA Artifact
