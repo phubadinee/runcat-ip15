@@ -3,20 +3,16 @@ import Foundation
 
 public struct CatAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
-        public var speedMultiplier: Double
-        public var batteryLevel: Int
-        public var statusMessage: String
+        public var statusText: String
 
-        public init(speedMultiplier: Double = 1.0, batteryLevel: Int = 100, statusMessage: String = "กำลังวิ่ง...") {
-            self.speedMultiplier = speedMultiplier
-            self.batteryLevel = batteryLevel
-            self.statusMessage = statusMessage
+        public init(statusText: String = "OK ✅") {
+            self.statusText = statusText
         }
     }
 
-    public var catName: String
+    public var title: String
 
-    public init(catName: String = "RunCat") {
-        self.catName = catName
+    public init(title: String = "Island Test") {
+        self.title = title
     }
 }
