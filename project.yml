@@ -15,6 +15,8 @@ settings:
     CODE_SIGN_IDENTITY: ""
     DEVELOPMENT_TEAM: ""
     GENERATE_INFOPLIST_FILE: "NO"
+    INFOPLIST_KEY_NSSupportsLiveActivities: "YES"
+    INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates: "YES"
 
 targets:
   CatRun:
@@ -27,11 +29,16 @@ targets:
       - path: Shared
     info:
       path: CatRun/Info.plist
+      properties:
+        NSSupportsLiveActivities: true
+        NSSupportsLiveActivitiesFrequentUpdates: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.custom.runcat
         INFOPLIST_FILE: CatRun/Info.plist
         GENERATE_INFOPLIST_FILE: "NO"
+        INFOPLIST_KEY_NSSupportsLiveActivities: "YES"
+        INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates: "YES"
     dependencies:
       - target: CatWidget
         embed: true
@@ -46,11 +53,16 @@ targets:
       - path: Shared
     info:
       path: CatWidget/Info.plist
+      properties:
+        NSSupportsLiveActivities: true
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.custom.runcat.CatWidget
         INFOPLIST_FILE: CatWidget/Info.plist
         GENERATE_INFOPLIST_FILE: "NO"
+        INFOPLIST_KEY_NSSupportsLiveActivities: "YES"
 
 schemes:
   CatRun:

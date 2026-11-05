@@ -56,21 +56,28 @@ jobs:
           echo "Found app at: $APP_PATH"
           cp -r "$APP_PATH" Payload/
 
+          APP_PLIST="Payload/CatRun.app/Info.plist"
+          if [ -f "$APP_PLIST" ]; then
+            echo "--- Enforcing NSSupportsLiveActivities in Main App Info.plist ---"
+            /usr/libexec/PlistBuddy -c "Delete :NSSupportsLiveActivities" "$APP_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSSupportsLiveActivities bool true" "$APP_PLIST"
+            /usr/libexec/PlistBuddy -c "Delete :NSSupportsLiveActivitiesFrequentUpdates" "$APP_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSSupportsLiveActivitiesFrequentUpdates bool true" "$APP_PLIST"
+            echo "Main App Plist check:"
+            plutil -p "$APP_PLIST" | grep -i "live" || true
+          fi
+
           WIDGET_PLIST="Payload/CatRun.app/PlugIns/CatWidget.appex/Info.plist"
           if [ -f "$WIDGET_PLIST" ]; then
-            echo "--- CatWidget Info.plist verification ---"
-            plutil -p "$WIDGET_PLIST" || true
-
-            # Ensure NSExtension dictionary is strictly present
+            echo "--- Enforcing in CatWidget Info.plist ---"
             /usr/libexec/PlistBuddy -c "Add :NSExtension dict" "$WIDGET_PLIST" 2>/dev/null || true
             /usr/libexec/PlistBuddy -c "Add :NSExtension:NSExtensionPointIdentifier string com.apple.widgetkit-extension" "$WIDGET_PLIST" 2>/dev/null || true
             /usr/libexec/PlistBuddy -c "Set :NSExtension:NSExtensionPointIdentifier com.apple.widgetkit-extension" "$WIDGET_PLIST" 2>/dev/null || true
             /usr/libexec/PlistBuddy -c "Set :CFBundlePackageType XPC!" "$WIDGET_PLIST" 2>/dev/null || true
-
-            echo "--- CatWidget Info.plist final check ---"
+            /usr/libexec/PlistBuddy -c "Delete :NSSupportsLiveActivities" "$WIDGET_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSSupportsLiveActivities bool true" "$WIDGET_PLIST"
+            echo "CatWidget Plist check:"
             plutil -p "$WIDGET_PLIST"
-          else
-            echo "Warning: Widget plist not found at $WIDGET_PLIST"
           fi
 
           zip -qr "CatRun.ipa" Payload
