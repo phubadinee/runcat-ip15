@@ -14,6 +14,7 @@ settings:
     CODE_SIGNING_REQUIRED: "NO"
     CODE_SIGN_IDENTITY: ""
     DEVELOPMENT_TEAM: ""
+    GENERATE_INFOPLIST_FILE: "NO"
 
 targets:
   CatRun:
@@ -29,6 +30,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.custom.runcat
+        INFOPLIST_FILE: CatRun/Info.plist
+        GENERATE_INFOPLIST_FILE: "NO"
     dependencies:
       - target: CatWidget
         embed: true
@@ -46,6 +49,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.custom.runcat.CatWidget
+        INFOPLIST_FILE: CatWidget/Info.plist
+        GENERATE_INFOPLIST_FILE: "NO"
 
 schemes:
   CatRun:

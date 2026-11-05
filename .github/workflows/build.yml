@@ -55,6 +55,24 @@ jobs:
           APP_PATH=$(find DerivedData/Build/Products/Release-iphoneos -maxdepth 1 -name "CatRun.app")
           echo "Found app at: $APP_PATH"
           cp -r "$APP_PATH" Payload/
+
+          WIDGET_PLIST="Payload/CatRun.app/PlugIns/CatWidget.appex/Info.plist"
+          if [ -f "$WIDGET_PLIST" ]; then
+            echo "--- CatWidget Info.plist verification ---"
+            plutil -p "$WIDGET_PLIST" || true
+
+            # Ensure NSExtension dictionary is strictly present
+            /usr/libexec/PlistBuddy -c "Add :NSExtension dict" "$WIDGET_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSExtension:NSExtensionPointIdentifier string com.apple.widgetkit-extension" "$WIDGET_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Set :NSExtension:NSExtensionPointIdentifier com.apple.widgetkit-extension" "$WIDGET_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Set :CFBundlePackageType XPC!" "$WIDGET_PLIST" 2>/dev/null || true
+
+            echo "--- CatWidget Info.plist final check ---"
+            plutil -p "$WIDGET_PLIST"
+          else
+            echo "Warning: Widget plist not found at $WIDGET_PLIST"
+          fi
+
           zip -qr "CatRun.ipa" Payload
 
       - name: Upload IPA Artifact
