@@ -1,0 +1,36 @@
+name: CatRun
+options:
+  bundleIdPrefix: com.custom.runcat
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "15.4"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+
+targets:
+  CatRun:
+    type: application
+    platform: iOS
+    sources:
+      - path: CatRun
+      - path: Shared
+    info:
+      path: CatRun/Info.plist
+    dependencies:
+      - target: CatWidget
+
+  CatWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: CatWidget
+      - path: Shared
+    info:
+      path: CatWidget/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.custom.runcat.widget
